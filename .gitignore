@@ -10,8 +10,8 @@ token.json
 # Environment / Secret Configuration
 .env
 .env.local
-# config.json
-# drive/config.json
+config.json
+drive/config.json
 
 # Temporary Files & Local Storage
 drive/temp/
