@@ -29,7 +29,7 @@ async function setup() {
       pageAccessToken: process.env.FB_PAGE_ACCESS_TOKEN || "",
     },
     paths: {
-      dbFile: "./db.json",
+      dbFile: "../db.json",
       tempDir: "./temp",
     },
   };
