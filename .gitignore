@@ -11,7 +11,7 @@ token.json
 .env
 .env.local
 config.json
-drive/config.json
+# drive/config.json
 
 # Temporary Files & Local Storage
 drive/temp/
