@@ -1,11 +1,60 @@
+# name: Automated Video Uploader Pipeline
+
+# on:
+#   # 1. Automated Schedule (Cron Job) - Har 2 ghante me chalega
+#   schedule:
+#     - cron: '0 */2 * * *'
+  
+#   # 2. Manual Trigger (GitHub par 'Run workflow' button dabakar)
+#   workflow_dispatch:
+
+# jobs:
+#   upload-job:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Code Checkout
+#       - name: Checkout Repository
+#         uses: actions/checkout@v3
+
+#       # Node.js Setup
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+#           cache: 'npm'
+
+#       # Dependencies Install
+#       - name: Install Dependencies
+#         run: npm ci
+
+#       # Environment Setup (Secrets se files banana)
+#       - name: Inject Credentials & Config
+#         env:
+#           DRIVE_CREDENTIALS_JSON: ${{ secrets.DRIVE_CREDENTIALS_JSON }}
+#           DRIVE_TOKEN_JSON: ${{ secrets.DRIVE_TOKEN_JSON }}
+#           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+#           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+#           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+#         run: node setup-env.js
+
+#       # Main Uploader Script Execution
+#       - name: Run Auto Uploader
+#         run: node index.js
+
+#       # Sync updated db.json back to Repository
+#       - name: Commit & Push Updated db.json
+#         run: |
+#           git config --global user.name 'github-actions[bot]'
+#           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+#           git add db.json
+#           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update db.json state" && git push)
 name: Automated Video Uploader Pipeline
 
 on:
-  # 1. Automated Schedule (Cron Job) - Har 2 ghante me chalega
   schedule:
     - cron: '0 */2 * * *'
-  
-  # 2. Manual Trigger (GitHub par 'Run workflow' button dabakar)
+
   workflow_dispatch:
 
 jobs:
@@ -13,39 +62,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Code Checkout
+      # Checkout Repository
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Node.js Setup
+      # Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: 18
+          cache: npm
 
-      # Dependencies Install
+      # Install Dependencies
       - name: Install Dependencies
         run: npm ci
 
-      # Environment Setup (Secrets se files banana)
-      - name: Inject Credentials & Config
-        env:
-          DRIVE_CREDENTIALS_JSON: ${{ secrets.DRIVE_CREDENTIALS_JSON }}
-          DRIVE_TOKEN_JSON: ${{ secrets.DRIVE_TOKEN_JSON }}
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
-          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
-        run: node setup-env.js
+      # Hardcoded Environment Variables (TEST ONLY)
+      - name: Set Environment Variables
+        run: |
+          echo "DRIVE_FOLDER_ID=1WSbvB0off9kd3GK3w6PlDKLID4uMGblK" >> $GITHUB_ENV
+          echo "FB_PAGE_ID=948950664962578" >> $GITHUB_ENV
+          echo "FB_PAGE_ACCESS_TOKEN=EAAWZAtujj3kABSMvLE9KdEQsKZAvdFhXLOay5WPSfMZAsv6bnhojH2gWaZCKYe5eZAVcNQ8ZAmuYnCDgpviZCdLZBGYlZCA6ykHpAtGuAuYqPUKVljwNCSh3PBLvgtyemsw9jwdCvAThlDZCRkAeZAXLCvxuZCh6iFBzgOKCBB6LMNaZAOSZAKMTGJwGeuawj4Dw90" >> $GITHUB_ENV
 
-      # Main Uploader Script Execution
+      # Optional: Create Google Drive Files
+      - name: Create Google Drive Credentials
+        run: |
+          mkdir -p drive
+          cat <<EOF > drive/credentials.json
+          YOUR_CREDENTIALS_JSON
+          EOF
+
+          cat <<EOF > drive/token.json
+          YOUR_TOKEN_JSON
+          EOF
+
+      # Run Project
       - name: Run Auto Uploader
         run: node index.js
 
-      # Sync updated db.json back to Repository
+      # Commit db.json
       - name: Commit & Push Updated db.json
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git add db.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update db.json state" && git push)
+
+          git diff --cached --quiet || (
+            git commit -m "chore: auto-update db.json state"
+            git push
+          )
