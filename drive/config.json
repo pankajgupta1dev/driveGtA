@@ -8,6 +8,6 @@
   },
   "paths": {
     "tempDir": "./temp",
-    "dbFile": "./db.json"
+    "dbFile": "../db.json"
   }
 }
