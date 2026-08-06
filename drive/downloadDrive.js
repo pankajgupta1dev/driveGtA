@@ -9,7 +9,9 @@ async function downloadNextVideo() {
   const auth = await getDriveAuth();
   const drive = google.drive({ version: "v3", auth });
 
-  const dbPath = path.resolve(__dirname, config.paths.dbFile);
+  // const dbPath = path.resolve(__dirname, config.paths.dbFile);
+  // db.json project root me hai
+  const dbPath = path.join(__dirname, "..", "db.json");
   const db = await fs.readJson(dbPath);
 
   console.log("🔍 Checking Google Drive folder for videos...");

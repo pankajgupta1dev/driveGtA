@@ -33,11 +33,9 @@ async function startFacebookOnlyWorkflow() {
 
     // 5. Update db.json
     console.log("\n📝 Updating db.json tracking...");
-    console.log("__dirname:", __dirname);
-    console.log("config.paths.dbFile:", config.paths.dbFile);
 
-    const dbPath = path.resolve(__dirname, config.paths.dbFile);
-    console.log("Resolved dbPath:", dbPath);
+    // db.json hamesha project root me hai
+    const dbPath = path.join(__dirname, "db.json");
 
     const db = await fs.readJson(dbPath);
 
