@@ -32,8 +32,13 @@ async function startFacebookOnlyWorkflow() {
     await deleteDriveFile(videoFile.id);
 
     // 5. Update db.json
-    console.log(`\n📝 Updating db.json tracking...`);
+    console.log("\n📝 Updating db.json tracking...");
+    console.log("__dirname:", __dirname);
+    console.log("config.paths.dbFile:", config.paths.dbFile);
+
     const dbPath = path.resolve(__dirname, config.paths.dbFile);
+    console.log("Resolved dbPath:", dbPath);
+
     const db = await fs.readJson(dbPath);
 
     db.processed_files.push(videoFile.id);
