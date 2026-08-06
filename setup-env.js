@@ -25,7 +25,8 @@ async function setup() {
     },
     facebook: {
       pageId: process.env.FB_PAGE_ID || "",
-      accessToken: process.env.FB_PAGE_ACCESS_TOKEN || "",
+      //   pageAccessToken: process.env.FB_PAGE_ACCESS_TOKEN || "",
+      pageAccessToken: process.env.FB_PAGE_ACCESS_TOKEN || "",
     },
     paths: {
       dbFile: "../db.json",
