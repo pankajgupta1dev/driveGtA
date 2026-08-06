@@ -1,123 +1,123 @@
-name: Automated Video Uploader Pipeline
-
-on:
-  # 1. Automated Schedule (Cron Job) - Har 2 ghante me chalega
-  schedule:
-    - cron: '0 */2 * * *'
-  
-  # 2. Manual Trigger (GitHub par 'Run workflow' button dabakar)
-  workflow_dispatch:
-
-jobs:
-  upload-job:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Code Checkout
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      # Node.js Setup
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      # Dependencies Install
-      - name: Install Dependencies
-        run: npm ci
-
-      # Environment Setup (Secrets se files banana)
-      - name: Inject Credentials & Config
-        env:
-          DRIVE_CREDENTIALS_JSON: ${{ secrets.DRIVE_CREDENTIALS_JSON }}
-          DRIVE_TOKEN_JSON: ${{ secrets.DRIVE_TOKEN_JSON }}
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
-          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
-        run: node setup-env.js
-
-      # Main Uploader Script Execution
-      - name: Run Auto Uploader
-        run: node index.js
-
-      # Sync updated db.json back to Repository
-      - name: Commit & Push Updated db.json
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add db.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update db.json state" && git push)
 # name: Automated Video Uploader Pipeline
 
 # on:
-#   # Har 2 ghante me automatically chalega
+#   # 1. Automated Schedule (Cron Job) - Har 2 ghante me chalega
 #   schedule:
 #     - cron: '0 */2 * * *'
-
-#   # GitHub Actions se manually run karne ke liye
+  
+#   # 2. Manual Trigger (GitHub par 'Run workflow' button dabakar)
 #   workflow_dispatch:
 
 # jobs:
 #   upload-job:
 #     runs-on: ubuntu-latest
 
-#     permissions:
-#       contents: write
-
 #     steps:
-#       # 1. Repository Checkout
+#       # Code Checkout
 #       - name: Checkout Repository
-#         uses: actions/checkout@v4
+#         uses: actions/checkout@v3
 
-#       # 2. Node.js Setup
+#       # Node.js Setup
 #       - name: Setup Node.js
-#         uses: actions/setup-node@v4
+#         uses: actions/setup-node@v3
 #         with:
 #           node-version: '18'
 #           cache: 'npm'
 
-#       # 3. Install Dependencies
+#       # Dependencies Install
 #       - name: Install Dependencies
 #         run: npm ci
 
-#       # 4. Google Drive credentials GitHub Secrets se
-#       # Facebook Page ID + Token testing ke liye hardcoded
+#       # Environment Setup (Secrets se files banana)
 #       - name: Inject Credentials & Config
 #         env:
 #           DRIVE_CREDENTIALS_JSON: ${{ secrets.DRIVE_CREDENTIALS_JSON }}
 #           DRIVE_TOKEN_JSON: ${{ secrets.DRIVE_TOKEN_JSON }}
 #           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-
-#           # Facebook - TEST ONLY
-#           FB_PAGE_ID: "948950664962578"
-#           FB_PAGE_ACCESS_TOKEN: "YOUR_FB_PAGE_ACCESS_TOKEN"
-
+#           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+#           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
 #         run: node setup-env.js
 
-#       # 5. Run Auto Uploader
+#       # Main Uploader Script Execution
 #       - name: Run Auto Uploader
-#         env:
-#           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-
-#           # Facebook - TEST ONLY
-#           FB_PAGE_ID: "948950664962578"
-#           FB_PAGE_ACCESS_TOKEN: "EAAWZAtujj3kABSMvLE9KdEQsKZAvdFhXLOay5WPSfMZAsv6bnhojH2gWaZCKYe5eZAVcNQ8ZAmuYnCDgpviZCdLZBGYlZCA6ykHpAtGuAuYqPUKVljwNCSh3PBLvgtyemsw9jwdCvAThlDZCRkAeZAXLCvxuZCh6iFBzgOKCBB6LMNaZAOSZAKMTGJwGeuawj4Dw90"
-
 #         run: node index.js
 
-#       # 6. Updated db.json repository me save karo
+#       # Sync updated db.json back to Repository
 #       - name: Commit & Push Updated db.json
 #         run: |
-#           git config --global user.name "github-actions[bot]"
-#           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
+#           git config --global user.name 'github-actions[bot]'
+#           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 #           git add db.json
+#           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update db.json state" && git push)
+name: Automated Video Uploader Pipeline
 
-#           if ! git diff --cached --quiet; then
-#             git commit -m "chore: auto-update db.json state"
-#             git push
-#           else
-#             echo "No db.json changes to commit."
-#           fi
+on:
+  # Har 2 ghante me automatically chalega
+  schedule:
+    - cron: '0 */2 * * *'
+
+  # GitHub Actions se manually run karne ke liye
+  workflow_dispatch:
+
+jobs:
+  upload-job:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Repository Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Node.js Setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3. Install Dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Google Drive credentials GitHub Secrets se
+      # Facebook Page ID + Token testing ke liye hardcoded
+      - name: Inject Credentials & Config
+        env:
+          DRIVE_CREDENTIALS_JSON: ${{ secrets.DRIVE_CREDENTIALS_JSON }}
+          DRIVE_TOKEN_JSON: ${{ secrets.DRIVE_TOKEN_JSON }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+
+          # Facebook - TEST ONLY
+          FB_PAGE_ID: "867103719828588"
+          FB_PAGE_ACCESS_TOKEN: "EAISFKwlbPeEBSIKGsbVMtpyZB1xPlwbkgoN1wTQgfZB2djIOfxN1iM5IRIGQOeGeDwgQarLmHZBSouZAFrOu4QZA32GiC0BMOdEzf84XfORslofxsLfZAunZBEDKU9f1nVae1tpB70Fzej2TAbmuOLCFT6tFKbKPpwqZCIFlmuKjM8HWDWj23YgA11QqgIOvziiGZAZBcr"
+
+        run: node setup-env.js
+
+      # 5. Run Auto Uploader
+      - name: Run Auto Uploader
+        env:
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+
+          # Facebook - TEST ONLY
+          FB_PAGE_ID: "867103719828588"
+          FB_PAGE_ACCESS_TOKEN: "EAISFKwlbPeEBSIKGsbVMtpyZB1xPlwbkgoN1wTQgfZB2djIOfxN1iM5IRIGQOeGeDwgQarLmHZBSouZAFrOu4QZA32GiC0BMOdEzf84XfORslofxsLfZAunZBEDKU9f1nVae1tpB70Fzej2TAbmuOLCFT6tFKbKPpwqZCIFlmuKjM8HWDWj23YgA11QqgIOvziiGZAZBcr"
+
+        run: node index.js
+
+      # 6. Updated db.json repository me save karo
+      - name: Commit & Push Updated db.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add db.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-update db.json state"
+            git push
+          else
+            echo "No db.json changes to commit."
+          fi
