@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Credentials & OAuth Tokens (MOST IMPORTANT - NEVER COMMIT)
+drive/credentials.json
+drive/token.json
+credentials.json
+token.json
+
+# Environment / Secret Configuration
+.env
+.env.local
+config.json
+drive/config.json
+
+# Temporary Files & Local Storage
+drive/temp/
+temp/
+*.mp4
+*.mkv
+*.mov
+*.webm
+*.avi
+
+# Local Database / State Files (Optional: agar git par db.json track nahi karna)
+# db.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# System & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
